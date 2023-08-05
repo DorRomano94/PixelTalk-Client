@@ -1,7 +1,8 @@
 import { Button, Grid } from "@mui/material"
 import { socket } from '../socket.js'
 import { useEffect, useRef, useState } from "react"
-
+const username = import.meta.env.VITE_ICE_SERVER_USERNAME
+const credential = import.meta.env.VITE_ICE_SERVER_CREDENTIAL
 const VideoCall = ({ roomId }) => {
     const [peerConnection, setPeerConnection] = useState(null);
     const localVideoRef = useRef(null);
@@ -41,23 +42,23 @@ const VideoCall = ({ roomId }) => {
                         },
                         {
                             urls: "turn:a.relay.metered.ca:80",
-                            username: "d770ffdf7810c269777a35d8",
-                            credential: "r9zst602QUSaAuzA",
+                            username: username,
+                            credential: credential,
                         },
                         {
                             urls: "turn:a.relay.metered.ca:80?transport=tcp",
-                            username: "d770ffdf7810c269777a35d8",
-                            credential: "r9zst602QUSaAuzA",
+                            username: username,
+                            credential: credential,
                         },
                         {
                             urls: "turn:a.relay.metered.ca:443",
-                            username: "d770ffdf7810c269777a35d8",
-                            credential: "r9zst602QUSaAuzA",
+                            username: username,
+                            credential: credential,
                         },
                         {
                             urls: "turn:a.relay.metered.ca:443?transport=tcp",
-                            username: "d770ffdf7810c269777a35d8",
-                            credential: "r9zst602QUSaAuzA",
+                            username: username,
+                            credential: credential,
                         },
                     ]
                 }
