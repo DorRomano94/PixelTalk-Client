@@ -27,7 +27,6 @@ const RoomPage = () => {
         setIsUsernameEntered(true);
     };
 
-
     // Validate room name exist
     useEffect(() => {
         if (!roomId) {
@@ -66,14 +65,14 @@ const RoomPage = () => {
     }, [isUsernameEntered, roomId, username])
 
     return (
-        <Container style={{ height: '100vh', overflow: 'hidden' }}>
+        <Container style={{ height: '100vh' }}>
             {isUsernameEntered ? (
                 <Grid container spacing={2} style={{ height: '90%' }}>
                     <VideoCall socket={socket} roomId={roomId} />
                     <Chat socket={socket} handleLeaveRoom={handleLeaveRoom} messages={messages} message={message} setMessage={setMessage} />
                 </Grid>
             ) : (
-                <UsernameForm username={username} setUsername={setUsername} setEnteredUsername={setEnteredUsername} />
+                <UsernameForm roomId={roomId} username={username} setUsername={setUsername} setEnteredUsername={setEnteredUsername} />
             )}
         </Container>
     );

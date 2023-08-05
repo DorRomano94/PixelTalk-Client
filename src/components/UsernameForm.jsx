@@ -1,9 +1,10 @@
 import { Button, TextField } from "@mui/material"
 
-const UsernameForm = ({ username, setUsername, setEnteredUsername }) => {
+const UsernameForm = ({ roomId, username, setUsername, setEnteredUsername }) => {
     return (
         <div style={{ textAlign: 'center', paddingTop: '100px' }}>
-            <h1>Chat Room</h1>
+            <h1>Room : {roomId}</h1>
+            <h3>Enter Username</h3>
             <TextField
                 fullWidth
                 variant="outlined"

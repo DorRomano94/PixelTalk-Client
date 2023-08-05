@@ -18,7 +18,7 @@ function HomePage() {
         <Container maxWidth="md" sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Grid container spacing={2} alignItems="center" justifyContent="center">
                 <Grid item xs={12}>
-                    <h1 style={{ textAlign: 'center' }}>Welcome to the Chat Room</h1>
+                    <h1 style={{ textAlign: 'center' }}>Welcome to the PixelTalk</h1>
                 </Grid>
                 <Grid item md={4} xs={12}>
                     <TextField
@@ -36,7 +36,7 @@ function HomePage() {
                 </Grid>
                 <Grid item md={4} xs={12}>
                     <Button variant="contained" color="primary" fullWidth onClick={joinRoom}>
-                        Join Room
+                        Create/Join Room
                     </Button>
                 </Grid>
             </Grid>
