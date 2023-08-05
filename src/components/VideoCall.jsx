@@ -37,10 +37,28 @@ const VideoCall = ({ roomId }) => {
                     iceServers: [
                         // { urls: 'stun:stun.l.google.com:19302' },
                         {
-                            url: 'turn:192.158.29.39:3478?transport=udp',
-                            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                            username: '28224511:1379330808'
-                        }
+                            urls: "stun:stun.relay.metered.ca:80",
+                        },
+                        {
+                            urls: "turn:a.relay.metered.ca:80",
+                            username: "d770ffdf7810c269777a35d8",
+                            credential: "r9zst602QUSaAuzA",
+                        },
+                        {
+                            urls: "turn:a.relay.metered.ca:80?transport=tcp",
+                            username: "d770ffdf7810c269777a35d8",
+                            credential: "r9zst602QUSaAuzA",
+                        },
+                        {
+                            urls: "turn:a.relay.metered.ca:443",
+                            username: "d770ffdf7810c269777a35d8",
+                            credential: "r9zst602QUSaAuzA",
+                        },
+                        {
+                            urls: "turn:a.relay.metered.ca:443?transport=tcp",
+                            username: "d770ffdf7810c269777a35d8",
+                            credential: "r9zst602QUSaAuzA",
+                        },
                     ]
                 }
                 const pc = new RTCPeerConnection(configuration);
