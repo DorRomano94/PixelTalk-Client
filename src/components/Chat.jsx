@@ -19,7 +19,7 @@ const Chat = ({ handleLeaveRoom, messages, message, setMessage }) => {
         <Grid item xs={12} md={4} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}> {/* Chat messages part */}
             <div className="room-container" style={{ flex: 1, overflowY: 'auto' }}>
                 <div className="room-header">
-                    <h1>Chat Room</h1>
+                    <h1>Chat</h1>
                     <Button variant="contained" color="secondary" onClick={handleLeaveRoom}>
                         Leave
                     </Button>
