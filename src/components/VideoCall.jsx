@@ -33,7 +33,15 @@ const VideoCall = ({ roomId }) => {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 localVideoRef.current.srcObject = stream;
 
-                const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+                const configuration = {
+                    iceServers: [
+                        { urls: 'stun:stun.l.google.com:19302' },
+                        {
+                            urls: 'turn:openrelay.metered.ca:80',
+                            username: 'openrelayproject',
+                            credentials: 'openrelayproject'
+                        }]
+                };
                 const pc = new RTCPeerConnection(configuration);
 
                 stream.getTracks().forEach((track) => pc.addTrack(track, stream));
