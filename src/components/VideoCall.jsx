@@ -3,15 +3,45 @@ import { socket } from '../socket.js'
 import { useEffect, useRef, useState } from "react"
 const username = import.meta.env.VITE_ICE_SERVER_USERNAME
 const credential = import.meta.env.VITE_ICE_SERVER_CREDENTIAL
-const VideoCall = ({ roomId }) => {
-    const [peerConnection, setPeerConnection] = useState(null);
-    const localVideoRef = useRef(null);
-    const remoteVideoRef = useRef(null);
-    const screenStreamRef = useRef(null);
 
-    const [isScreenSharing, setIsScreenSharing] = useState(false);
+const VideoCall = ({ roomId, peerConnection, localVideoRef, remoteVideoRef, screenShareStreamRef, setPeerConnection }) => {
     const [isAudioMuted, setIsAudioMuted] = useState(false);
     const [isVideoEnabled, setIsVideoEnabled] = useState(true);
+    const [isScreenSharing, setIsScreenSharing] = useState(false);
+
+    const toggleScreenSharing = async () => {
+        try {
+            if (!isScreenSharing) {
+                // Start screen sharing
+                const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                screenShareStreamRef.current = screenStream;
+
+                // Replace the camera track with the screen sharing track
+                peerConnection.getSenders().forEach(sender => {
+                    if (sender.track.kind === 'video') {
+                        sender.replaceTrack(screenStream.getVideoTracks()[0]);
+                    }
+                });
+
+                setIsScreenSharing(true);
+            } else {
+                // Stop screen sharing
+                screenShareStreamRef.current.getTracks().forEach(track => track.stop());
+
+                // Replace the screen sharing track with the original camera track
+                const userCameraStream = localVideoRef.current.srcObject;
+                peerConnection.getSenders().forEach(sender => {
+                    if (sender.track.kind === 'video') {
+                        sender.replaceTrack(userCameraStream.getVideoTracks()[0]);
+                    }
+                });
+
+                setIsScreenSharing(false);
+            }
+        } catch (error) {
+            console.error('Error toggling screen sharing:', error);
+        }
+    };
 
     // Function to toggle mute/unmute audio
     const toggleAudio = () => {
@@ -90,6 +120,7 @@ const VideoCall = ({ roomId }) => {
                     sdp: pc.localDescription,
                     room: roomId,
                 });
+
             } catch (error) {
                 console.error('Error accessing media devices:', error);
                 alert('Error accessing media devices.');
@@ -97,7 +128,7 @@ const VideoCall = ({ roomId }) => {
         }
         initWebRTC()
 
-    }, [roomId])
+    }, [localVideoRef, remoteVideoRef, roomId, setPeerConnection])
 
     // Handle incoming offers and answers
     useEffect(() => {
@@ -148,16 +179,24 @@ const VideoCall = ({ roomId }) => {
         };
     }, [peerConnection]);
 
+
+
+
+
+
     return (
         <Grid item xs={12} md={8} style={{ height: '100%' }}>
             <div style={{ height: '100%', backgroundColor: '#f0f0f0' }}>
-                <video ref={localVideoRef} style={{ width: '50%', height: '100%', backgroundColor: 'black' }} autoPlay></video>
+                <video ref={localVideoRef} style={{ width: '50%', height: '100%', backgroundColor: 'black' }} autoPlay muted></video>
                 <video ref={remoteVideoRef} style={{ width: '50%', height: '100%', backgroundColor: 'black' }} autoPlay></video>
                 <Button variant="contained" onClick={toggleAudio}>
                     {isAudioMuted ? 'Unmute Audio' : 'Mute Audio'}
                 </Button>
                 <Button variant="contained" onClick={toggleCamera}>
                     {isVideoEnabled ? 'Close Camera' : 'Open Camera'}
+                </Button>
+                <Button variant="contained" onClick={toggleScreenSharing}>
+                    {isScreenSharing ? 'Stop Sharing' : 'Share Screen'}
                 </Button>
             </div>
         </Grid>

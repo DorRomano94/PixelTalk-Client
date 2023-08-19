@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../socket.js'
 import { Grid, TextField, Button, Container } from '@mui/material';
@@ -17,14 +17,41 @@ const RoomPage = () => {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
+    const [peerConnection, setPeerConnection] = useState(null);
+    const localVideoRef = useRef(null);
+    const remoteVideoRef = useRef(null);
+    const screenShareStreamRef = useRef(null);
 
-    const handleLeaveRoom = () => {
+
+
+
+    const handleLeaveRoom = async () => {
+        await stopWebRTC()
         socket.emit('leaveRoom');
         navigate('/')
     };
 
     const setEnteredUsername = () => {
         setIsUsernameEntered(true);
+    };
+
+    // Function to stop the WebRTC connection and media streams
+    const stopWebRTC = async () => {
+        try {
+            if (peerConnection) {
+                peerConnection.close();
+            }
+            if (localVideoRef.current && localVideoRef.current.srcObject) {
+                const tracks = localVideoRef.current.srcObject.getVideoTracks();
+                tracks.forEach((track) => track.stop());
+            }
+            if (remoteVideoRef.current && remoteVideoRef.current.srcObject) {
+                const tracks = remoteVideoRef.current.srcObject.getVideoTracks();
+                tracks.forEach((track) => track.stop());
+            }
+        } catch (error) {
+            console.error('Error stopping WebRTC:', error);
+        }
     };
 
     // Validate room name exist
@@ -48,8 +75,6 @@ const RoomPage = () => {
         };
     }, [navigate]);
 
-
-
     // Join to room
     useEffect(() => {
         const joinRoom = () => {
@@ -66,10 +91,20 @@ const RoomPage = () => {
 
     return (
         <Container style={{ height: '100vh' }}>
+            <Button variant="contained" color="secondary" onClick={handleLeaveRoom}>
+                Leave
+            </Button>
             {isUsernameEntered ? (
                 <Grid container spacing={2} style={{ height: '90%' }}>
-                    <VideoCall socket={socket} roomId={roomId} />
-                    <Chat socket={socket} handleLeaveRoom={handleLeaveRoom} messages={messages} message={message} setMessage={setMessage} />
+                    <VideoCall
+                        roomId={roomId}
+                        peerConnection={peerConnection}
+                        localVideoRef={localVideoRef}
+                        remoteVideoRef={remoteVideoRef}
+                        screenShareStreamRef={screenShareStreamRef}
+                        setPeerConnection={setPeerConnection}
+                    />
+                    <Chat socket={socket} messages={messages} message={message} setMessage={setMessage} />
                 </Grid>
             ) : (
                 <UsernameForm roomId={roomId} username={username} setUsername={setUsername} setEnteredUsername={setEnteredUsername} />

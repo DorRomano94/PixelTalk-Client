@@ -20,9 +20,6 @@ const Chat = ({ handleLeaveRoom, messages, message, setMessage }) => {
             <div className="room-container" style={{ flex: 1, overflowY: 'auto' }}>
                 <div className="room-header">
                     <h1>Chat</h1>
-                    <Button variant="contained" color="secondary" onClick={handleLeaveRoom}>
-                        Leave
-                    </Button>
                 </div>
                 <ul className="message-list">
                     {messages.map((message, index) => (
