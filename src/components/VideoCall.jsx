@@ -13,7 +13,16 @@ const VideoCall = ({ roomId, peerConnection, localVideoRef, remoteVideoRef, scre
         try {
             if (!isScreenSharing) {
                 // Start screen sharing
-                const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                // const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                // Get the user's screen
+                const screenStream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        mandatory: {
+                            chromeMediaSource: 'screen',
+                            audio: false
+                        }
+                    }
+                });
                 screenShareStreamRef.current = screenStream;
 
                 // Replace the camera track with the screen sharing track
