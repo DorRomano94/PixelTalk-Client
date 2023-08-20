@@ -13,15 +13,8 @@ const VideoCall = ({ roomId, peerConnection, localVideoRef, remoteVideoRef, scre
         try {
             if (!isScreenSharing) {
                 // Start screen sharing
-                // const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
                 // Get the user's screen
-                const screenStream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        width: 640,
-                        height: 480
-                    },
-                    mediaSource: "window"
-                });
                 screenShareStreamRef.current = screenStream;
 
                 // Replace the camera track with the screen sharing track
@@ -131,7 +124,7 @@ const VideoCall = ({ roomId, peerConnection, localVideoRef, remoteVideoRef, scre
 
             } catch (error) {
                 console.error('Error accessing media devices:', error);
-                alert('Error accessing media devices.');
+                alert(`Error accessing media devices. error : ${JSON.stringify(error)}`);
             }
         }
         initWebRTC()
