@@ -17,11 +17,10 @@ const VideoCall = ({ roomId, peerConnection, localVideoRef, remoteVideoRef, scre
                 // Get the user's screen
                 const screenStream = await navigator.mediaDevices.getUserMedia({
                     video: {
-                        mandatory: {
-                            chromeMediaSource: 'screen',
-                            audio: false
-                        }
-                    }
+                        width: 640,
+                        height: 480
+                    },
+                    mediaSource: "window"
                 });
                 screenShareStreamRef.current = screenStream;
 
